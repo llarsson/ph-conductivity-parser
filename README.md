@@ -14,7 +14,7 @@ Usage
 
 Example:
 
-  python PhConductivityParser.py file1.txt file2.txt
+    python PhConductivityParser.py file1.txt file2.txt
 
 Running the above will cause file1.txt and file2.txt to be parsed and
 the output will be in file1.txt.xls and file2.txt.xls.
