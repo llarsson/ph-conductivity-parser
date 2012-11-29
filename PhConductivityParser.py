@@ -44,7 +44,7 @@ def excel_exporter(records, filename):
 
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet("Sheet 1")
-    headers = ["No.", "Comment / ID", "Start time", "Rx", "Result", 
+    headers = ["No", "Comment / ID", "Start time", "Rx", "Result", 
             "Unit", "Name", "LabID", "File"]
     for column, header in enumerate(headers):
         sheet.write(0, column, header)
