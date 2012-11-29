@@ -34,7 +34,10 @@ class Record:
                 self.comment,
                 self.start_time,
                 self.rx,
-                self.result,
+                # result is a number, Excel needs it treated as such
+                # warning: this could introduce subtle bugs, due to
+                # handling of floats
+                float(self.result),
                 self.unit,
                 self.name
                 ]
@@ -44,8 +47,17 @@ def excel_exporter(records, filename):
 
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet("Sheet 1")
+
+    # Styles for cells
+    general = xlwt.easyxf()
+    number = xlwt.easyxf(num_format_str='0.000')
+
+    # Very fragile mapping between cell headers and contents formatting
     headers = ["No", "Comment / ID", "Start time", "Rx", "Result", 
             "Unit", "Name", "LabID", "File"]
+    types = [general, general, general, general, number, general, general, number]
+
+    # Write out the headers
     for column, header in enumerate(headers):
         sheet.write(0, column, header)
 
@@ -53,8 +65,8 @@ def excel_exporter(records, filename):
     for row, record in enumerate(records):
         # We will have to add +1 to the row index due to the headers
         for column, value in enumerate(record.as_list()):
-            sheet.write(row+1, column, value)
-        sheet.write(row+1, 7, lab_id)
+            sheet.write(row+1, column, value, types[column])
+        sheet.write(row+1, 7, lab_id, number)
         sheet.write(row+1, 8, xlwt.Formula("MID(CELL(\"filename\"),SEARCH(\"[\",CELL(\"filename\"))+1,SEARCH(\"]\",CELL(\"filename\"))-SEARCH(\"[\",CELL(\"filename\"))-1)))"))
         lab_id += 1
     workbook.save(filename)
